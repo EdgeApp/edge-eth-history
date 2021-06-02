@@ -1,1 +1,1 @@
-# Edge Ethereum Gas Price History
+# Edge Crypto Fee Tracker
