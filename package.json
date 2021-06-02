@@ -1,15 +1,15 @@
 {
-  "name": "edge-eth-history",
+  "name": "edge-fee-tracker",
   "version": "0.1.0",
   "private": true,
-  "description": "Ethereum Gas Price Tracking and Graphing",
-  "homepage": "https://github.com/EdgeApp/edge-eth-history#readme",
+  "description": "Crypto Fees Tracking and Graphing",
+  "homepage": "https://github.com/EdgeApp/edge-fee-tracker#readme",
   "bugs": {
-    "url": "https://github.com/EdgeApp/edge-eth-history/issues"
+    "url": "https://github.com/EdgeApp/edge-fee-tracker/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/EdgeApp/edge-eth-history.git"
+    "url": "git+ssh://git@github.com/EdgeApp/edge-fee-tracker.git"
   },
   "license": "MIT",
   "author": "Airbitz, Inc.",
