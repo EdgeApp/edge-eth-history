@@ -27,6 +27,7 @@
     "prepare": "configure && yarn build",
     "pretest": "npm run build",
     "start": "node -r sucrase/register src/indexEthInfo.ts",
+    "startEthEngines": "node lib/ethFeesEngines.js",
     "test": "npm run lint && mocha testsrc/**/*"
   },
   "dependencies": {
