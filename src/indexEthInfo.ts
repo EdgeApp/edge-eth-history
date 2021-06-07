@@ -26,14 +26,14 @@ promisify(ethHistory)
 // ---------------------------------------------------------------------
 
 async function main(): Promise<void> {
-  const { dbFullpath, httpPort } = config
+  const { dbFullpath, httpPort, httpHost } = config
   if (cluster.isMaster) {
     await rebuildCouch(dbFullpath, couchSchema).catch(e => console.log(e))
     forkChildren()
   } else {
     // Start the HTTP server:
     const httpServer = http.createServer(app)
-    httpServer.listen(httpPort, '127.0.0.1')
+    httpServer.listen(httpPort, `${httpHost}`)
     console.log(`Server cluster node listening on port ${httpPort}`)
   }
 }
