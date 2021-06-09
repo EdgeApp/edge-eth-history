@@ -26,40 +26,38 @@ const ethFeesLoop = async (): Promise<GasInfo | GasInfo2> => {
     let ans
     try {
       const callAttempt = await ethGasStationCall()
-      prePrepData = callAttempt
-      ans = {
-        fast: prePrepData.fast / 10,
-        fastest: prePrepData.fastest / 10,
-        safeLow: prePrepData.safeLow / 10,
-        average: prePrepData.average / 10,
-        source: 'EthGasStation'
+      if (callAttempt != null) {
+        prePrepData = callAttempt
+        const _id = new Date()
+        ans = {
+          _id: _id,
+          fast: prePrepData.fast / 10,
+          fastest: prePrepData.fastest / 10,
+          safeLow: prePrepData.safeLow / 10,
+          average: prePrepData.average / 10,
+          source: 'EthGasStation'
+        }
+        await dbAuth.insert(ans)
       }
-      const _id = new Date()
-      const logWithId = {
-        ...ans,
-        _id
-      }
-      await dbAuth.insert(logWithId)
     } catch (error) {
       mylog('Error getting data from EthGasStation', error)
     }
     if (prePrepData === undefined) {
       try {
         const callAttempt = await etherChainCall()
-        prePrepData = callAttempt
-        ans = {
-          fast: prePrepData.fast,
-          fastest: prePrepData.fastest,
-          safeLow: prePrepData.safeLow,
-          average: prePrepData.standard,
-          source: 'EtherChain'
+        if (callAttempt != null) {
+          prePrepData = callAttempt
+          const _id = new Date()
+          ans = {
+            _id: _id,
+            fast: prePrepData.fast,
+            fastest: prePrepData.fastest,
+            safeLow: prePrepData.safeLow,
+            average: prePrepData.standard,
+            source: 'EtherChain'
+          }
+          await dbAuth.insert(ans)
         }
-        const _id = new Date()
-        const logWithId = {
-          ...ans,
-          _id
-        }
-        await dbAuth.insert(logWithId)
       } catch (error) {
         mylog('Error getting data from EtherChain', error)
       }
