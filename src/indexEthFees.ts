@@ -38,6 +38,13 @@ const asEthGasStationResponse = asObject({
   })
 })
 
+const asEthChainResponse = asObject({
+  safeLow: asNumber,
+  standard: asNumber,
+  fast: asNumber,
+  fastest: asNumber
+})
+
 export const ethGasStationCall = async (): Promise<GasInfo | null> => {
   const options = {
     method: 'GET',
@@ -61,7 +68,7 @@ export const ethGasStationCall = async (): Promise<GasInfo | null> => {
     return null
   }
 }
-export const etherChainCall = async (): Promise<GasInfo2> => {
+export const etherChainCall = async (): Promise<GasInfo2 | null> => {
   const options = {
     method: 'GET',
     headers: {
@@ -70,6 +77,18 @@ export const etherChainCall = async (): Promise<GasInfo2> => {
     }
   }
   const url = `https://etherchain.org/api/gasPriceOracle`
-  const result = await fetch(url, options)
-  return result.json()
+
+  try {
+    const result = await fetch(url, options)
+    if (result.ok === false) {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      mylog(`Eth Gas Station returned code ${result.status}`)
+    }
+    const jsonObj = await result.json()
+    asEthChainResponse(jsonObj)
+    return jsonObj
+  } catch (e) {
+    mylog('Error is:', e)
+    return null
+  }
 }
