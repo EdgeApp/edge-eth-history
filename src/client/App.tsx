@@ -2,6 +2,8 @@ import './App.css'
 
 import React, { Component } from 'react'
 
+import Sidebar from './components/Sidebar'
+
 export const body = {
   margin: 0,
   padding: 0,
@@ -16,8 +18,18 @@ export const row = {
 }
 
 class App extends Component {
+  componentDidMount(): void {
+    Object.assign(document.body.style, body)
+  }
+
   render(): JSX.Element {
-    return <div style={row} />
+    return (
+      <>
+        <div style={row}>
+          <Sidebar />
+        </div>
+      </>
+    )
   }
 }
 
