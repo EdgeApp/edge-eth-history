@@ -26,7 +26,8 @@
     "precommit": "npm run build && npm run test",
     "prepare": "configure ./src/utils/config.ts && yarn build",
     "pretest": "npm run build",
-    "start": "node -r sucrase/register src/indexEthInfo.ts",
+    "start": "node -r sucrase/register src/index.ts",
+    "startEngines": "node lib/feesEngine.js",
     "test": "npm run lint && mocha testsrc/**/*"
   },
   "dependencies": {
