@@ -48,3 +48,24 @@ export const apiFetchCall = (
     return null
   }
 }
+
+export const createDatesArray = (
+  firstDate: Date,
+  secondDate: Date
+): String[] => {
+  const intervalMS = config.timeBetweenCyclesInMinutes * 60 * 1000
+  const firstDateMS = firstDate.getTime()
+  const secondDateMS = secondDate.getTime()
+
+  if (firstDateMS >= secondDateMS) {
+    console.log('Date format error')
+    return []
+  }
+  const datesArray: String[] = []
+  const datesNumber = (secondDateMS - firstDateMS) / intervalMS
+  for (let i = 0; i < datesNumber; i++) {
+    const newDate = new Date(firstDateMS + i * intervalMS)
+    datesArray.push(newDate.toISOString())
+  }
+  return datesArray
+}
