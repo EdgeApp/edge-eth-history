@@ -20,6 +20,13 @@ export const asEthGasStationDBData = asObject({
   average: asNumber
 })
 
+const asMempoolSpaceDBData = asObject({
+  fastestFee: asNumber,
+  halfHourFee: asNumber,
+  hourFee: asNumber,
+  minimumFee: asNumber
+})
+
 // call the packages we need
 const app = express()
 
@@ -51,6 +58,23 @@ router.get('/getEthGasStationData/', async function (req, res) {
   try {
     const doc = await ethHistory.get(_id3)
     const cleanedDoc = asEthGasStationDBData(doc.data)
+    res.json(cleanedDoc)
+  } catch (e) {
+    mylog(e)
+    if (e != null && e.error === 'not_found') {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      res.status(404).send(`404 error`)
+    } else {
+      res.status(500).send(`Internal Server Error.`)
+    }
+  }
+})
+
+router.get('/getMempoolSpaceData/', async function (req, res) {
+  const _id = req.query._id
+  try {
+    const doc = await mempoolHistory.get(_id)
+    const cleanedDoc = asMempoolSpaceDBData(doc.data)
     res.json(cleanedDoc)
   } catch (e) {
     mylog(e)
