@@ -5,8 +5,8 @@
 import cluster from 'cluster'
 import { forkChildren, rebuildCouch } from 'edge-server-tools'
 
-import { config } from './config'
-import { couchSchema } from './couchSchema'
+import { config } from './utils/config'
+import { couchSchema } from './utils/couchSchema'
 const express = require('express')
 const http = require('http')
 const nano = require('nano')
@@ -18,9 +18,12 @@ const app = express()
 // Nano for CouchDB
 // =============================================================================
 const nanoDb = nano(config.dbFullpath)
-const ethHistory = nanoDb.db.use('eth_history')
+const ethHistory = nanoDb.db.use('fees_ethgasstation')
+const mempoolHistory = nanoDb.db.use('fees_mempoolspace')
+const earnHistory = nanoDb.db.use('fees_earn')
 promisify(ethHistory)
-
+promisify(mempoolHistory)
+promisify(earnHistory)
 // ---------------------------------------------------------------------
 // INITIALIZATION
 // ---------------------------------------------------------------------

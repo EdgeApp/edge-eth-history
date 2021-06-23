@@ -27,6 +27,12 @@ export interface CouchDbInfo {
 
 export const couchSchema: CouchDbInfo[] = [
   {
-    name: 'eth_history'
+    name: 'fees_ethgasstation'
+  },
+  {
+    name: 'fees_mempoolspace'
+  },
+  {
+    name: 'fees_earn'
   }
 ]
