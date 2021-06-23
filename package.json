@@ -18,6 +18,7 @@
     "build": "sucrase -q -t typescript,imports,jsx -d ./lib ./src",
     "built": "npm run build && npm run test",
     "clean": "rimraf lib",
+    "client": "parcel serve src/client/index.html --open",
     "demo": "parcel serve src/index.html --open",
     "fix": "npm run lint -- --fix",
     "go": "yarn build && yarn start",
