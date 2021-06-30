@@ -1,5 +1,6 @@
 import fetch from 'node-fetch'
 
+import { EarnAllInfo, EarnUnsortedData } from '../index'
 import { config } from './config'
 
 const mylog = console.log
@@ -68,4 +69,36 @@ export const createDatesArray = (
     datesArray.push(newDate.toISOString())
   }
   return datesArray
+}
+
+export const earnDataParser = (
+  preParsedData: EarnUnsortedData
+): EarnAllInfo => {
+  const {
+    zeroToOne,
+    oneToTwo,
+    twoToThree,
+    threeToTen
+  } = preParsedData.data.reduce((selectedData, feeObject) => {
+    for (const dataIndex in config.earnDataSelection) {
+      const [min, max, minutes = null] = config.earnDataSelection[dataIndex]
+      if (minutes !== null && feeObject.maxMinutes !== minutes) continue
+      if (feeObject.minDelay === min && feeObject.maxDelay === max) {
+        selectedData[dataIndex] = feeObject.maxFee
+      }
+    }
+    return selectedData
+  }, {} as any)
+  if (
+    zeroToOne === undefined ||
+    oneToTwo === undefined ||
+    twoToThree === undefined ||
+    threeToTen === undefined
+  ) {
+    throw new Error('Error: Corrupted Data')
+  }
+  return {
+    ...preParsedData,
+    sortedData: { zeroToOne, oneToTwo, twoToThree, threeToTen }
+  }
 }

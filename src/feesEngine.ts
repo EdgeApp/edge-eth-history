@@ -4,7 +4,7 @@ import { earnCall, EarnInfo } from './partners/earn'
 import { ethGasStationCall, GasInfo } from './partners/ethGasStation'
 import { BitcoinInfo, mempoolSpaceCall } from './partners/mempoolSpace'
 import { config } from './utils/config'
-import { normalizeDate, snooze } from './utils/utils'
+import { earnDataParser, normalizeDate, snooze } from './utils/utils'
 const nano = require('nano')
 const promisify = require('promisify-node')
 
@@ -90,6 +90,7 @@ const feesLoop = async (): Promise<GasInfo | BitcoinInfo | EarnInfo> => {
         return jsonObj.fees
       })
       .then(earnResponse)
+      .then(earnDataParser)
       .then(dbEarn.insert)
       .catch(e => mylog(e))
     try {
