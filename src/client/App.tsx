@@ -2,6 +2,7 @@ import './App.css'
 
 import React, { Component } from 'react'
 
+import Graphs from './components/Graphs'
 import Sidebar from './components/Sidebar'
 
 export const body = {
@@ -27,6 +28,7 @@ class App extends Component {
       <>
         <div style={row}>
           <Sidebar />
+          <Graphs />
         </div>
       </>
     )
