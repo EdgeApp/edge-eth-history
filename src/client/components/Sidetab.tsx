@@ -1,10 +1,9 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 
 // @ts-expect-error
 import logo from '../images/logo.png'
 
 interface SidetabProps {
-  appId?: string
   serverName: string
 }
 
@@ -28,16 +27,12 @@ const sidebar = {
   width: '200px'
 }
 
-class Sidetab extends PureComponent<SidetabProps> {
-  render(): JSX.Element {
-    return (
-      <div style={sidebar}>
-        <img style={logoStyle} src={logo} alt="Edge Logo" />
-        <div style={titleText}>Edge</div>
-        <div style={titleText}>{this.props.serverName}</div>'
-        {this.props.children}
-      </div>
-    )
-  }
+export default function Sidetab(props: SidetabProps): JSX.Element {
+  return (
+    <div style={sidebar}>
+      <img style={logoStyle} src={logo} alt="Edge Logo" />
+      <div style={titleText}>Edge</div>
+      <div style={titleText}>{props.serverName}</div>
+    </div>
+  )
 }
-export default Sidetab
