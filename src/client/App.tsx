@@ -2,6 +2,7 @@ import './App.css'
 
 import React, { useEffect } from 'react'
 
+import GraphScene from './components/GraphScene'
 import Sidebar from './components/Sidebar'
 
 export const body = {
@@ -25,6 +26,7 @@ export default function App(): JSX.Element {
     <>
       <div style={row}>
         <Sidebar />
+        <GraphScene />
       </div>
     </>
   )
