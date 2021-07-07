@@ -1,6 +1,6 @@
 import './App.css'
 
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
 
 import Sidebar from './components/Sidebar'
 
@@ -17,20 +17,15 @@ export const row = {
   tableLayout: 'fixed' as 'fixed'
 }
 
-class App extends Component {
-  componentDidMount(): void {
+export default function App(): JSX.Element {
+  useEffect(() => {
     Object.assign(document.body.style, body)
-  }
-
-  render(): JSX.Element {
-    return (
-      <>
-        <div style={row}>
-          <Sidebar />
-        </div>
-      </>
-    )
-  }
+  }, [])
+  return (
+    <>
+      <div style={row}>
+        <Sidebar />
+      </div>
+    </>
+  )
 }
-
-export default App
