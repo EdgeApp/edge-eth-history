@@ -32,5 +32,14 @@ export const strings = {
   earn_zero_to_one_data_name: '0-1 Block Delay',
   earn_one_to_two_data_name: '1-2 Block Delay',
   earn_two_to_three_data_name: '2-3 Block Delay',
-  earn_three_to_ten_data_name: '3-10 Block Delay'
+  earn_three_to_ten_data_name: '3-10 Block Delay',
+
+  sidetabLogoAltText: 'Edge Logo',
+
+  mainButtonLabel: 'Search',
+
+  sidetabServerName: 'Eth History',
+
+  timepickerStartLabel: 'Start',
+  timepickerEndLabel: 'End'
 }
