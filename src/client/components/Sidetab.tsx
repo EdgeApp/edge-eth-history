@@ -1,38 +1,42 @@
 import React from 'react'
 
+import { strings } from '../../theme/graphString'
+import { graphTheme } from '../../theme/graphTheme'
 // @ts-expect-error
 import logo from '../images/logo.png'
 
 interface SidetabProps {
   serverName: string
+  children: React.ReactNode
 }
 
 const logoStyle = {
-  marginTop: '26px',
-  marginLeft: '26px',
-  marginBottom: '10px',
-  height: '28px',
-  width: '28px'
+  marginTop: graphTheme.logoStyleMarginTop,
+  marginLeft: graphTheme.logoStyleMarginLeft,
+  marginBottom: graphTheme.logoStyleMarginBottom,
+  height: graphTheme.logoStyleHeight,
+  width: graphTheme.logoStyleWidth
 }
 
 const titleText = {
-  marginLeft: '26px',
-  color: 'white',
-  fontSize: '24px'
+  marginLeft: graphTheme.titleTextMarginLeft,
+  color: graphTheme.titleTextColor,
+  fontSize: graphTheme.titleTextFontSize
 }
 
 const sidebar = {
-  display: 'table-cell' as 'table-cell',
-  background: 'linear-gradient(90deg, #0C446A 0%, #0D2145 100%)',
-  width: '200px'
+  display: graphTheme.sidetabSidebarDisplay as 'table-cell',
+  background: graphTheme.sidetabSidebarBackground,
+  width: graphTheme.sidetabSidebarWidth
 }
 
 export default function Sidetab(props: SidetabProps): JSX.Element {
   return (
     <div style={sidebar}>
-      <img style={logoStyle} src={logo} alt="Edge Logo" />
+      <img style={logoStyle} src={logo} alt={strings.sidetabLogoAltText} />
       <div style={titleText}>Edge</div>
       <div style={titleText}>{props.serverName}</div>
+      {props.children}
     </div>
   )
 }
