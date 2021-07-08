@@ -1,5 +1,7 @@
 import { format } from 'date-fns'
-import React, { useState } from 'react'
+import { Location } from 'history'
+import React, { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import { strings } from '../../theme/graphString'
 import { graphTheme } from '../../theme/graphTheme'
@@ -92,6 +94,9 @@ const earnGraphProps = {
     }
   ]
 }
+interface GraphSceneProps {
+  setLoading: React.Dispatch<React.SetStateAction<any>>
+}
 
 const parseDate = (timestamp: string): string => {
   const dateObj = format(new Date(timestamp), "yyyy-MM-dd'T'HH:mm")
@@ -126,21 +131,54 @@ export const dataSelecter = (rawData: any, provider: string): any => {
   }
 }
 
-export default function GraphScene(): JSX.Element {
-  const [data] = useState([])
+export default function GraphScene(props: GraphSceneProps): JSX.Element {
+  const [graphData, setGraphData] = useState([] as any)
+  const location = useLocation<Location>()
+
+  const getData = async (start: string, end: string): Promise<number> => {
+    let data
+    console.time('getData')
+    props.setLoading(true)
+    let response
+    const uri = `${window.location.origin}/v1/getDataAllPartners/?firstDate=${start}&secondDate=${end}`
+    try {
+      response = await fetch(uri)
+      data = await response.json()
+      props.setLoading(false)
+      setGraphData(data)
+    } catch (e) {
+      props.setLoading(false)
+    }
+    console.timeEnd('getData')
+    return response.status
+  }
+  const reRoute = async (): Promise<void> => {
+    try {
+      const path = window.location.href
+      const dates = path.split('/').slice(-2)
+      const start = dates[0]
+      const end = dates[1]
+      await getData(start, end)
+    } catch (e) {
+      console.log('Error Rerouting:', e)
+    }
+  }
+  useEffect(() => {
+    reRoute().catch(e => console.log(e))
+  }, [location])
 
   return (
     <>
       <div style={graphHolder}>
         <Graph
           {...ethGraphProps}
-          data={dataSelecter(data, 'Eth Gas Station')}
+          data={dataSelecter(graphData, 'Eth Gas Station')}
         />
         <Graph
           {...mempoolGraphProps}
-          data={dataSelecter(data, 'Mempool.space')}
+          data={dataSelecter(graphData, 'Mempool.space')}
         />
-        <Graph {...earnGraphProps} data={dataSelecter(data, 'Earn')} />
+        <Graph {...earnGraphProps} data={dataSelecter(graphData, 'Earn')} />
       </div>
     </>
   )

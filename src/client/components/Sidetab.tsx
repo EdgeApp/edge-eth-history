@@ -5,6 +5,7 @@ import logo from '../images/logo.png'
 
 interface SidetabProps {
   serverName: string
+  children: React.ReactNode
 }
 
 const logoStyle = {
@@ -33,6 +34,7 @@ export default function Sidetab(props: SidetabProps): JSX.Element {
       <img style={logoStyle} src={logo} alt="Edge Logo" />
       <div style={titleText}>Edge</div>
       <div style={titleText}>{props.serverName}</div>
+      {props.children}
     </div>
   )
 }
