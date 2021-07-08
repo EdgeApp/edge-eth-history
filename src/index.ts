@@ -153,9 +153,9 @@ router.get('/getDataAllPartners/', async function (req, res) {
   const secondDate = new Date(req.query.secondDate)
   const datesArray = createDatesArray(firstDate, secondDate)
 
-  const ethDoc = ethHistory.fetch({ _id: datesArray })
-  const mempoolDoc = mempoolHistory.fetch({ _id: datesArray })
-  const earnDoc = earnHistory.fetch({ _id: datesArray })
+  const ethDoc = ethHistory.fetch({ keys: datesArray })
+  const mempoolDoc = mempoolHistory.fetch({ keys: datesArray })
+  const earnDoc = earnHistory.fetch({ keys: datesArray })
   try {
     const datesDataArray = await Promise.all([ethDoc, mempoolDoc, earnDoc])
     res.json(datesDataArray)
