@@ -17,6 +17,7 @@
   "scripts": {
     "build": "sucrase -q -t typescript,imports,jsx -d ./lib ./src",
     "built": "npm run build && npm run test",
+    "configure": "node -r sucrase/register ./src/utils/config.ts",
     "clean": "rimraf lib",
     "client": "parcel serve src/client/index.html --open",
     "demo": "parcel serve src/index.html --open",
