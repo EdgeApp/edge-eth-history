@@ -2,7 +2,7 @@
 // BASE SETUP
 // =============================================================================
 
-import { asArray, asNumber, asObject } from 'cleaners'
+import { asArray, asNumber, asObject, asOptional, asString } from 'cleaners'
 import cluster from 'cluster'
 import { forkChildren, rebuildCouch } from 'edge-server-tools'
 
@@ -28,7 +28,7 @@ const asMempoolSpaceDBData = asObject({
   minimumFee: asNumber
 })
 
-const asEarnDBData = asArray(
+export const asEarnRawData = asArray(
   asObject({
     minFee: asNumber,
     maxFee: asNumber,
@@ -40,6 +40,28 @@ const asEarnDBData = asArray(
     maxMinutes: asNumber
   })
 )
+
+const asEarnSortedData = asObject({
+  zeroToOne: asNumber,
+  oneToTwo: asNumber,
+  twoToThree: asNumber,
+  threeToTen: asNumber
+})
+
+const asEarnUnsortedData = asObject({
+  _id: asString,
+  _rev: asOptional(asString),
+  data: asEarnRawData
+})
+
+export type EarnUnsortedData = ReturnType<typeof asEarnUnsortedData>
+
+const asEarnDBData = asObject({
+  ...asEarnUnsortedData.shape,
+  sortedData: asEarnSortedData
+})
+
+export type EarnAllInfo = ReturnType<typeof asEarnDBData>
 
 // call the packages we need
 const app = express()
@@ -105,7 +127,7 @@ router.get('/getEarnData/', async function (req, res) {
   const _id = req.query._id
   try {
     const doc = await earnHistory.get(_id)
-    const cleanedDoc = asEarnDBData(doc.data)
+    const cleanedDoc = asEarnDBData(doc)
     res.json(cleanedDoc)
   } catch (e) {
     mylog(e)
