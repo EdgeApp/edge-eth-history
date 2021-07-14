@@ -1,7 +1,8 @@
 import './App.css'
 
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
 
+import GraphScene from './components/GraphScene'
 import Sidebar from './components/Sidebar'
 
 export const body = {
@@ -17,20 +18,16 @@ export const row = {
   tableLayout: 'fixed' as 'fixed'
 }
 
-class App extends Component {
-  componentDidMount(): void {
+export default function App(): JSX.Element {
+  useEffect(() => {
     Object.assign(document.body.style, body)
-  }
-
-  render(): JSX.Element {
-    return (
-      <>
-        <div style={row}>
-          <Sidebar />
-        </div>
-      </>
-    )
-  }
+  }, [])
+  return (
+    <>
+      <div style={row}>
+        <Sidebar />
+        <GraphScene />
+      </div>
+    </>
+  )
 }
-
-export default App
