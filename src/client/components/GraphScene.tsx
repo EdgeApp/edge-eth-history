@@ -1,12 +1,15 @@
-import { format } from 'date-fns'
+import { Location } from 'history'
 import React, { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import { strings } from '../../theme/graphString'
 import { graphTheme } from '../../theme/graphTheme'
+import { getDates, parseDate } from '../clientUtils/clientUtils'
+import useFetchGraphData from '../hooks/useFetchGraphData'
 import Graph from './Graph'
 
 const graphHolder = {
-  height: '90%'
+  height: graphTheme.graphHolderHeight
 }
 
 const ethGraphProps = {
@@ -92,16 +95,14 @@ const earnGraphProps = {
     }
   ]
 }
-
-const parseDate = (timestamp: string): string => {
-  const dateObj = format(new Date(timestamp), "yyyy-MM-dd'T'HH:mm")
-  return dateObj
+interface GraphSceneProps {
+  setLoading: React.Dispatch<React.SetStateAction<any>>
 }
 
 export const dataParser = (array, index): any => {
   let parsedData: any[] = []
   const shortDateData: any[] = []
-  if (array[index] === undefined) return
+  if (array === undefined || array[index] === undefined) return
   parsedData = array[index].rows
   parsedData.forEach(object => {
     if (object.error === 'not_found') return
@@ -126,21 +127,38 @@ export const dataSelecter = (rawData: any, provider: string): any => {
   }
 }
 
-export default function GraphScene(): JSX.Element {
-  const [data] = useState([])
+export default function GraphScene(props: GraphSceneProps): JSX.Element {
+  const [graphData, setGraphData] = useState([] as any)
+  useLocation<Location>()
+
+  const getData = async (): Promise<void> => {
+    try {
+      const response = await useFetchGraphData(
+        dates.start,
+        dates.end,
+        props.setLoading
+      )
+      setGraphData(response)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const dates = getDates(window.location.href)
+  getData().catch(e => console.log(e))
 
   return (
     <>
       <div style={graphHolder}>
         <Graph
           {...ethGraphProps}
-          data={dataSelecter(data, 'Eth Gas Station')}
+          data={dataSelecter(graphData, 'Eth Gas Station')}
         />
         <Graph
           {...mempoolGraphProps}
-          data={dataSelecter(data, 'Mempool.space')}
+          data={dataSelecter(graphData, 'Mempool.space')}
         />
-        <Graph {...earnGraphProps} data={dataSelecter(data, 'Earn')} />
+        <Graph {...earnGraphProps} data={dataSelecter(graphData, 'Earn')} />
       </div>
     </>
   )

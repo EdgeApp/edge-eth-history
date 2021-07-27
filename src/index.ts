@@ -4,6 +4,7 @@
 
 import { asArray, asNumber, asObject, asOptional, asString } from 'cleaners'
 import cluster from 'cluster'
+import cors from 'cors'
 import { forkChildren, rebuildCouch } from 'edge-server-tools'
 
 import { config } from './utils/config'
@@ -65,6 +66,8 @@ export type EarnAllInfo = ReturnType<typeof asEarnDBData>
 
 // call the packages we need
 const app = express()
+app.use(cors())
+app.use('/', express.static('dist'))
 
 const mylog = console.log
 
@@ -81,6 +84,11 @@ promisify(earnHistory)
 // ROUTES FOR OUR API
 // =============================================================================
 const router = express.Router()
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  next()
+})
 
 router.use(function (req, res, next) {
   mylog('Something is happening.')
@@ -145,9 +153,9 @@ router.get('/getDataAllPartners/', async function (req, res) {
   const secondDate = new Date(req.query.secondDate)
   const datesArray = createDatesArray(firstDate, secondDate)
 
-  const ethDoc = ethHistory.fetch({ _id: datesArray })
-  const mempoolDoc = mempoolHistory.fetch({ _id: datesArray })
-  const earnDoc = earnHistory.fetch({ _id: datesArray })
+  const ethDoc = ethHistory.fetch({ keys: datesArray })
+  const mempoolDoc = mempoolHistory.fetch({ keys: datesArray })
+  const earnDoc = earnHistory.fetch({ keys: datesArray })
   try {
     const datesDataArray = await Promise.all([ethDoc, mempoolDoc, earnDoc])
     res.json(datesDataArray)
