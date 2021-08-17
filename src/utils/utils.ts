@@ -24,31 +24,29 @@ export function normalizeDate(dateSrc: string): string | null {
   return dateNorm.toISOString()
 }
 
-export const apiFetchCall = (
-  fetchCleaner: (value: any) => any,
-  url: string,
-  providerName: string
-) => async (): Promise<any | null> => {
-  const options = {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
+export const apiFetchCall =
+  (fetchCleaner: (value: any) => any, url: string, providerName: string) =>
+  async (): Promise<any | null> => {
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      }
+    }
+    try {
+      const result = await fetch(url, options)
+      if (result.ok === false) {
+        mylog(`${providerName} returned code ${JSON.stringify(result.status)}`)
+      }
+      const jsonObj = await result.json()
+      fetchCleaner(jsonObj)
+      return jsonObj
+    } catch (e) {
+      mylog('Error is:', e)
+      return null
     }
   }
-  try {
-    const result = await fetch(url, options)
-    if (result.ok === false) {
-      mylog(`${providerName} returned code ${JSON.stringify(result.status)}`)
-    }
-    const jsonObj = await result.json()
-    fetchCleaner(jsonObj)
-    return jsonObj
-  } catch (e) {
-    mylog('Error is:', e)
-    return null
-  }
-}
 
 export const createDatesArray = (
   firstDate: Date,
@@ -74,21 +72,17 @@ export const createDatesArray = (
 export const earnDataParser = (
   preParsedData: EarnUnsortedData
 ): EarnAllInfo => {
-  const {
-    zeroToOne,
-    oneToTwo,
-    twoToThree,
-    threeToTen
-  } = preParsedData.data.reduce((selectedData, feeObject) => {
-    for (const dataIndex in config.earnDataSelection) {
-      const [min, max, minutes = null] = config.earnDataSelection[dataIndex]
-      if (minutes !== null && feeObject.maxMinutes !== minutes) continue
-      if (feeObject.minDelay === min && feeObject.maxDelay === max) {
-        selectedData[dataIndex] = feeObject.maxFee
+  const { zeroToOne, oneToTwo, twoToThree, threeToTen } =
+    preParsedData.data.reduce<any>((selectedData, feeObject) => {
+      for (const dataIndex in config.earnDataSelection) {
+        const [min, max, minutes = null] = config.earnDataSelection[dataIndex]
+        if (minutes !== null && feeObject.maxMinutes !== minutes) continue
+        if (feeObject.minDelay === min && feeObject.maxDelay === max) {
+          selectedData[dataIndex] = feeObject.maxFee
+        }
       }
-    }
-    return selectedData
-  }, {} as any)
+      return selectedData
+    }, {})
   if (
     zeroToOne === undefined ||
     oneToTwo === undefined ||
