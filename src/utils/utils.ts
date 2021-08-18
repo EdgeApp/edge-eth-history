@@ -50,12 +50,21 @@ export const apiFetchCall =
 
 export const createDatesArray = (
   firstDate: Date,
-  secondDate: Date
+  secondDate: Date,
+  intervalMinutes: number = config.timeBetweenCyclesInMinutes
 ): String[] => {
-  const intervalMS = config.timeBetweenCyclesInMinutes * 60 * 1000
+  if (
+    !(firstDate instanceof Date) ||
+    !(secondDate instanceof Date) ||
+    isNaN(firstDate.getTime()) ||
+    isNaN(secondDate.getTime())
+  ) {
+    console.log('Date format error')
+    return []
+  }
+  const intervalMS = intervalMinutes * 60 * 1000
   const firstDateMS = firstDate.getTime()
   const secondDateMS = secondDate.getTime()
-
   if (firstDateMS >= secondDateMS) {
     console.log('Date format error')
     return []

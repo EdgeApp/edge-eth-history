@@ -298,5 +298,109 @@ export const fixture = {
       outputType: 'Error',
       expectedOutput: 'Error: Corrupted Data'
     },
+  ],
+  normalizeDate: [
+    {
+      testDescription: 'Returns normalized UTC Date when passed an accurate date in the form of a string',
+      inputData: '2020-04-13T00:17:34.111+08:00',
+      expectedType: 'string',
+      expectedOutput: '2020-04-12T16:10:00.000Z'
+    },
+    {
+      testDescription: 'Returns null when passed an inaccurate date in the form of a string',
+      inputData: '2020-02-34T00:17:34.111+08:00',
+      expectedType: 'null',
+      expectedOutput: null
+    },
+    {
+      testDescription: 'Returns null when passed undefined',
+      inputData: undefined,
+      expectedType: 'null',
+      expectedOutput: null
+    },
+    {
+      testDescription: 'Returns null when passed object',
+      inputData: {},
+      expectedType: 'null',
+      expectedOutput: null
+    },
+    {
+      testDescription: 'Returns null when passed NaN',
+      inputData: NaN,
+      expectedType: 'null',
+      expectedOutput: null
+    },
+    {
+      testDescription: 'Returns null when passed array',
+      inputData: [],
+      expectedType: 'null',
+      expectedOutput: null
+    }
+  ],
+  createDatesArray: [
+    {
+      testDescription: 'Returns array of dates separated by configuration interval(default 10 minutes) when passed two dates',
+      firstDate: new Date('2020-02-01T00:00:00.000-08:00'),
+      secondDate: new Date('2020-02-01T01:00:00.000-08:00'),
+      interval: 10,
+      expectedType: 'array',
+      expectedOutput: [
+        '2020-02-01T08:00:00.000Z',
+        '2020-02-01T08:10:00.000Z',
+        '2020-02-01T08:20:00.000Z',
+        '2020-02-01T08:30:00.000Z',
+        '2020-02-01T08:40:00.000Z',
+        '2020-02-01T08:50:00.000Z'
+      ]
+    },
+    {
+      testDescription: 'Returns empty array when passed newer first date than second date',
+      firstDate: new Date('2020-02-01T01:00:00.000-08:00'),
+      secondDate: new Date('2020-02-01T00:00:00.000-08:00'),
+      expectedType: 'array',
+      expectedOutput: []
+    },
+    {
+      testDescription: 'Returns empty array when passed undefined dates',
+      firstDate: undefined,
+      secondDate: undefined,
+      expectedType: 'array',
+      expectedOutput: []
+    },
+    {
+      testDescription: 'Returns empty array when passed an invalid date and a good date',
+      firstDate: new Date('scnjs'),
+      secondDate: new Date('2020-02-01T00:00:00.000-08:00'),
+      expectedType: 'array',
+      expectedOutput: []
+    },
+    {
+      testDescription: 'Returns empty array when passed numbers',
+      firstDate: 123,
+      secondDate: 123,
+      expectedType: 'array',
+      expectedOutput: []
+    },
+    {
+      testDescription: 'Returns empty array when passed strings',
+      firstDate: 'bsdk',
+      secondDate: 'agib',
+      expectedType: 'array',
+      expectedOutput: []
+    },
+    {
+      testDescription: 'Returns empty array when passed nulls',
+      firstDate: null,
+      secondDate: null,
+      expectedType: 'array',
+      expectedOutput: []
+    },
+    {
+      testDescription: 'Returns empty array when passed empty arrays',
+      firstDate: [],
+      secondDate: [],
+      expectedType: 'array',
+      expectedOutput: []
+    }
   ]
 }
